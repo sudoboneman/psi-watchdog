@@ -36,10 +36,8 @@ def stream_main_logs():
                                 log_data = json.loads(decoded[6:])
                                 message = log_data.get("log", "").strip()
                                 
-                                # Alert on Python crashes or Flask errors
-                                if "[ERROR]" in message or "Traceback" in message or "Exception" in message:
-                                    payload = {"content": f" **ENGINE ALERT** \n```text\n{message}\n```"}
-                                    requests.post(WEBHOOK_URL, json=payload)
+                                payload = {"content": f" **ENGINE ALERT** \n```text\n{message}\n```"}
+                                requests.post(WEBHOOK_URL, json=payload)
                                     
                             except json.JSONDecodeError:
                                 pass
