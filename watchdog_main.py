@@ -13,9 +13,21 @@ def stream_main_logs():
 
     print(f"Started monitoring {SPACE_ID}...")
 
+    try:
+        requests.post(WEBHOOK_URL, json={"content": f" **Watchdog successfully booted and attached to {SPACE_ID}**"})
+        print("Startup ping sent to Discord.")
+    except Exception as e:
+        print(f"CRITICAL: Could not send startup ping to Discord: {e}")
+
     while True:
         try:
             with requests.get(url, headers=headers, stream=True, timeout=120) as response:
+
+                if response.status_code != 200:
+                    print(f"Hugging Face rejected connection! HTTP {response.status_code}: {response.text}")
+                    time.sleep(10)
+                    continue
+
                 for line in response.iter_lines():
                     if line:
                         decoded = line.decode('utf-8')
