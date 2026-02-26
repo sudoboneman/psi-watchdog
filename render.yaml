@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: psi-09-watchdog
+    env: python
+    plan: free
+    region: ohio
+    buildCommand: "pip install -r requirements.txt"
+    # We explicitly use python instead of gunicorn to prevent duplicate background threads
+    startCommand: "python app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.0"
+      # sync: false tells Render to prompt you for these values in the dashboard securely
+      # so you don't accidentally commit your tokens to public GitHub
+      - key: HF_TOKEN
+        sync: false
+      - key: DISCORD_WEBHOOK_MAIN
+        sync: false
+      - key: DISCORD_WEBHOOK_LLM
+        sync: false
