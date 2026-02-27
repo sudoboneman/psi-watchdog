@@ -11,7 +11,7 @@ WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_MAIN")
 # Using a deque with a maxlen prevents your Render server from running out of RAM.
 seen_logs = deque(maxlen=2000)
 
-def stream_llm_logs():
+def stream_main_logs():
     url = f"https://huggingface.co/api/spaces/{SPACE_ID}/logs/run"
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
 
