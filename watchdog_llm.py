@@ -30,17 +30,14 @@ def stream_llm_logs():
 
                 for line in response.iter_lines():
                     if line:
-                        decoded = line.decode('utf-8')
-                        if decoded.startswith("data: "):
-                            try:
-                                log_data = json.loads(decoded[6:])
-                                message = log_data.get("log", "").strip()
-                                
-                                payload = {"content": f" **CORTEX ALERT** \n```text\n{message}\n```"}
-                                requests.post(WEBHOOK_URL, json=payload)
-                                    
-                            except json.JSONDecodeError:
-                                pass
+                        raw_line = line.decode('utf-8')
+                        payload = {"content": f"```json\n{raw_line}\n```"}
+                        post_response = requests.post(WEBHOOK_URL, json=payload)
+
+                        if post_response.status_code == 429:
+                            print("Discord Rate Limit hit. Critical Error Apparent.")
+                            time.sleep(2) # Pause briefly so Discord doesn't ban the webhook
+                        
         except Exception as e:
             print(f"CORTEX stream disconnected: {e}. Retrying in 10s...")
             time.sleep(10)
