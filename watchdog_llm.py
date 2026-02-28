@@ -49,7 +49,7 @@ def stream_llm_logs():
                         post_response = requests.post(WEBHOOK_URL, json=payload)
                         
                         if post_response.status_code == 429:
-                            print("⚠️ Discord Rate Limit hit! Slowing down...")
+                            print("Discord Rate Limit hit! Slowing down...")
                             time.sleep(2) 
                                 
         except Exception as e:
